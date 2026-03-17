@@ -68,17 +68,18 @@ with st.expander("📂 Namespaces a extraer", expanded=False):
 # ========================
 with st.expander("📧 Envío de correo (opcional)", expanded=False):
     st.info("Si no completas estos campos, el reporte se generará igualmente y podrás descargarlo aquí.")
-    email_to  = st.text_input("Para (separar por coma)",  placeholder="analista@empresa.com")
-    email_cc  = st.text_input("CC (opcional)",             placeholder="jefe@empresa.com")
-    email_bcc = st.text_input("BCC (opcional)")
+    # Leemos las credenciales ocultas (si no existen, devuelven string vacío)
+    email_user = st.secrets.get("EMAIL_USER", "")
+    email_pass = st.secrets.get("EMAIL_PASS", "")
 
     col3, col4 = st.columns(2)
     with col3:
-        email_user = st.text_input("Tu correo Gmail / SMTP",  placeholder="tuusuario@gmail.com")
         smtp_server = st.text_input("Servidor SMTP", value="smtp.gmail.com")
     with col4:
-        email_pass = st.text_input("Contraseña / App Password", type="password")
         smtp_port  = st.number_input("Puerto SMTP", value=587, step=1)
+        
+    if not email_user or not email_pass:
+        st.warning("⚠️ No se detectaron credenciales de correo en los secretos. El envío de email fallará.")
 
     attach_zip = st.checkbox("Adjuntar ZIP con todos los archivos SQL")
 
