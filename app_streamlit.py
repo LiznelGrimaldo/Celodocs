@@ -44,6 +44,14 @@ with st.expander("🔌 Conexión a Celonis", expanded=True):
 with st.expander("🔄 Comparación (Diff)", expanded=True):
     st.info("Sube el Excel generado anteriormente para obtener el resumen de cambios.")
     prev_file = st.file_uploader("Reporte anterior (.xlsx)", type=["xlsx"])
+
+    # Guardamos el archivo subido de forma temporal antes de ejecutar
+    prev_temp_path = None
+    if prev_file is not None:
+        prev_temp_path = "prev_report_temp.xlsx"
+        with open(prev_temp_path, "wb") as f:
+            f.write(prev_file.getbuffer())
+
 # ========================
 # SECCIÓN 2: NAMESPACES
 # ========================
@@ -81,11 +89,6 @@ st.divider()
 run = st.button("🚀 Ejecutar extracción", type="primary", use_container_width=True)
 
 if run:
-    if prev_file is not None:
-        prev_temp_path = "prev_report_temp.xlsx"
-        with open(prev_temp_path, "wb") as f:
-            f.write(prev_file.getbuffer())
-        env_vars["CELODOCS_PREV_FILE"] = prev_temp_path
     # Validación mínima
     if not url or not token:
         st.error("❌ Debes ingresar la URL y el API Token de Celonis.")
@@ -112,6 +115,11 @@ data_pool_ids_to_extract_from = {dp_ids}
 
     # Variables de entorno
     env_vars = os.environ.copy()
+    
+    # --- AQUÍ AGREGAMOS LA RUTA DEL ARCHIVO PREVIO AL ENTORNO ---
+    if prev_temp_path:
+        env_vars["CELODOCS_PREV_FILE"] = prev_temp_path
+
     env_vars["CELODOCS_ENVIRONMENT"]   = environment
     env_vars["CELODOCS_NAMESPACES"]    = ",".join(namespaces)
     env_vars["CELODOCS_ATTACH_SQL_ZIP"] = "1" if attach_zip else "0"
@@ -119,8 +127,8 @@ data_pool_ids_to_extract_from = {dp_ids}
     if email_to:        env_vars["CELODOCS_EMAIL_TO"]  = email_to
     if email_cc:        env_vars["CELODOCS_EMAIL_CC"]  = email_cc
     if email_bcc:       env_vars["CELODOCS_EMAIL_BCC"] = email_bcc
-    if email_user:      env_vars["EMAIL_USER"]          = email_user
-    if email_pass:      env_vars["EMAIL_PASS"]          = email_pass
+    if email_user:      env_vars["EMAIL_USER"]         = email_user
+    if email_pass:      env_vars["EMAIL_PASS"]         = email_pass
     if smtp_server:     env_vars["SMTP_SERVER"]         = smtp_server
     env_vars["SMTP_PORT"] = str(int(smtp_port))
 
