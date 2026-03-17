@@ -126,9 +126,7 @@ data_pool_ids_to_extract_from = {dp_ids}
     env_vars["CELODOCS_NAMESPACES"]    = ",".join(namespaces)
     env_vars["CELODOCS_ATTACH_SQL_ZIP"] = "1" if attach_zip else "0"
 
-    if email_to:        env_vars["CELODOCS_EMAIL_TO"]  = email_to
-    if email_cc:        env_vars["CELODOCS_EMAIL_CC"]  = email_cc
-    if email_bcc:       env_vars["CELODOCS_EMAIL_BCC"] = email_bcc
+    if email_to:        env_vars["CELODOCS_EMAIL_TO"]  = email_to    
     if email_user:      env_vars["EMAIL_USER"]         = email_user
     if email_pass:      env_vars["EMAIL_PASS"]         = email_pass
     if smtp_server:     env_vars["SMTP_SERVER"]         = smtp_server
