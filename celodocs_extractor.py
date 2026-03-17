@@ -713,8 +713,9 @@ def main():
     out_xlsx = OUT_DIR / f"Requirements_Filled_{tag}.xlsx"
 
     # --- Diff contra versión anterior ---
-    prev = find_previous_report(str(OUT_DIR), pattern="Requirements_Filled_*.xlsx")
-    if prev:
+    prev = os.getenv("CELODOCS_PREV_FILE")
+    
+    if prev and os.path.exists(prev):
         before_obj = read_sheet_as_dict(prev, "Objects", key_col="ObjectTypeId")
         before_evt = read_sheet_as_dict(prev, "Events", key_col="EventTypeId")
 
