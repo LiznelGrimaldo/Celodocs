@@ -40,7 +40,10 @@ with st.expander("🔌 Conexión a Celonis", expanded=True):
         "Data Pool IDs (separados por coma, opcional)",
         placeholder="id1, id2  — dejar vacío para usar el primero disponible"
     )
-
+    
+with st.expander("🔄 Comparación (Diff)", expanded=True):
+    st.info("Sube el Excel generado anteriormente para obtener el resumen de cambios.")
+    prev_file = st.file_uploader("Reporte anterior (.xlsx)", type=["xlsx"])
 # ========================
 # SECCIÓN 2: NAMESPACES
 # ========================
@@ -78,6 +81,11 @@ st.divider()
 run = st.button("🚀 Ejecutar extracción", type="primary", use_container_width=True)
 
 if run:
+    if prev_file is not None:
+        prev_temp_path = "prev_report_temp.xlsx"
+        with open(prev_temp_path, "wb") as f:
+            f.write(prev_file.getbuffer())
+        env_vars["CELODOCS_PREV_FILE"] = prev_temp_path
     # Validación mínima
     if not url or not token:
         st.error("❌ Debes ingresar la URL y el API Token de Celonis.")
