@@ -69,6 +69,7 @@ with st.expander("📂 Namespaces a extraer", expanded=False):
 with st.expander("📧 Envío de correo (opcional)", expanded=False):
     st.info("Si no completas estos campos, el reporte se generará igualmente y podrás descargarlo aquí.")
     # Leemos las credenciales ocultas (si no existen, devuelven string vacío)
+    email_to  = st.text_input("Para (separar por coma)",  placeholder="analista@empresa.com")
     email_user = st.secrets.get("EMAIL_USER", "")
     email_pass = st.secrets.get("EMAIL_PASS", "")
 
